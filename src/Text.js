@@ -65,46 +65,42 @@ class Text extends Component {
             url: 'http://localhost:3000/api/v1/login', 
             data: { 'username' : this.lusername.value, 
                     'password' : this.lpassword.value
-                  },
+                  }
         })
         .then(res => {
+            console.log(res);
             this.props.history.push("/AddProject");
         })
         .catch(function (error) {
-            console.log(error)
-            // var errArr = error.response.data.errors[0].msg;
-            // self.openModal();
-            // errArr.forEach(function(val, i) {
-            //     self.afterOpenModal(val['msg']);
-            // })
+            var errArr = error.response.data.errors[0].msg;
+            self.openModal();
+            errArr.forEach(function(val, i) {
+                self.afterOpenModal(val['msg']);
+            })
         });
     }
 
-    loginAfterRegistering() {
-        var self = this;
-        axios({
-            method:'post',
-            url: 'http://localhost:3000/api/v1/login', 
-            data: { 'username' : this.rusername.value, 
-                    'password' : this.rpassword.value, 
-                  },
-        })
-        .then(res => {
-            // self.openModal();
-            // self.afterOpenModal(res.data);
-            console.log(res);
-            console.log(res.data);
-            this.props.history.push("/AddProject");
-        })
-        .catch(function (error) {
-            console.log(error.response);
-            // var errArr = error.response.data.errors[0].msg;
-            // self.openModal();
-            // errArr.forEach(function(val, i) {
-            //     self.afterOpenModal(val['msg']);
-            // })
-        });
-    }
+    // loginAfterRegistering() {
+    //     var self = this;
+    //     axios({
+    //         method:'post',
+    //         url: 'http://localhost:3000/api/v1/login', 
+    //         data: { 'username' : this.rusername.value, 
+    //                 'password' : this.rpassword.value, 
+    //               },
+    //     })
+    //     .then(res => {
+    //         this.props.history.push("/AddProject");
+    //     })
+    //     .catch(function (error) {
+    //         console.log(error.response);
+    //         var errArr = error.response.data.errors[0].msg;
+    //         self.openModal();
+    //         errArr.forEach(function(val, i) {
+    //             self.afterOpenModal(val['msg']);
+    //         })
+    //     });
+    // }
 
     registerAccount() {
         var self = this;
@@ -118,7 +114,6 @@ class Text extends Component {
         .then(res => {   
             self.openModal();
             self.afterOpenModal(res.data);                   
-
             // document.getElementById('close-btn').addEventListener('click' , function(){
             //     self.loginAfterRegistering();
             // }) TODO finish redirect after registering 
