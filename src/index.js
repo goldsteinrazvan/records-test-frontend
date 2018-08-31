@@ -6,6 +6,7 @@ import Text from './Text';
 import Page from './Page';
 import App from './App';
 import AddProject from './AddProject';
+import Projects from './Projects';
 import { BrowserRouter, Router, Route} from 'react-router-dom';
 
 
@@ -15,6 +16,7 @@ ReactDOM.render(
             <Route exact path="/" component={App}/>
             <Route path="/Page" component={Page}/>
             <Route path="/AddProject" component={AddProject}/>
+            <Route path="/Projects" component={Projects}/>
         </div>
     </BrowserRouter>,
     document.getElementById('root'));

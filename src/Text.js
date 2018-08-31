@@ -59,51 +59,34 @@ class Text extends Component {
     }
     
     enterAccount() {
-        var self = this;
+        let self = this;
         axios({
             method:'post',
             url: 'http://localhost:3000/api/v1/login', 
             data: { 'username' : this.lusername.value, 
                     'password' : this.lpassword.value
-                  }
+                  },
+            withCredentials:true
         })
         .then(res => {
-            console.log(res);
-            this.props.history.push("/AddProject");
+            this.props.history.push("/Projects");
         })
         .catch(function (error) {
-            var errArr = error.response.data.errors[0].msg;
-            self.openModal();
-            errArr.forEach(function(val, i) {
-                self.afterOpenModal(val['msg']);
-            })
+            if(error.response.status === 401){
+                self.openModal();
+                self.afterOpenModal(error.response.data.status);
+                window.setTimeout(function(){
+                    self.props.history.push("/Projects");
+                }, 1000);    
+            }else{
+                self.openModal();
+                self.afterOpenModal(error.response.data);  
+            }
         });
     }
 
-    // loginAfterRegistering() {
-    //     var self = this;
-    //     axios({
-    //         method:'post',
-    //         url: 'http://localhost:3000/api/v1/login', 
-    //         data: { 'username' : this.rusername.value, 
-    //                 'password' : this.rpassword.value, 
-    //               },
-    //     })
-    //     .then(res => {
-    //         this.props.history.push("/AddProject");
-    //     })
-    //     .catch(function (error) {
-    //         console.log(error.response);
-    //         var errArr = error.response.data.errors[0].msg;
-    //         self.openModal();
-    //         errArr.forEach(function(val, i) {
-    //             self.afterOpenModal(val['msg']);
-    //         })
-    //     });
-    // }
-
     registerAccount() {
-        var self = this;
+        let self = this;
         axios({
             method:'post',
             url: 'http://localhost:3000/api/v1/register', 
@@ -114,12 +97,9 @@ class Text extends Component {
         .then(res => {   
             self.openModal();
             self.afterOpenModal(res.data);                   
-            // document.getElementById('close-btn').addEventListener('click' , function(){
-            //     self.loginAfterRegistering();
-            // }) TODO finish redirect after registering 
         })
         .catch(function (error) {
-            var errArr = error.response.data.errors[0].msg;
+            let errArr = error.response.data.errors[0].msg;
             self.openModal();
             errArr.forEach(function(val, i) {
                 self.afterOpenModal(val['msg']);

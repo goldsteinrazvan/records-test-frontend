@@ -11,73 +11,43 @@ class AddProject extends Component {
         this.addProject = this.addProject.bind(this); 
 
         this.state = {
-            data: []
+            message: ''
         }
     }
 
     addProject() {
-        var self=this;
-
-        let instance = axios.create();
-        
-          // Set the AUTH token for any request
-        instance.interceptors.request.use(function (config) {
-            const token = localStorage.getItem('token');
-            config.headers.Authorization =  token ? `${token}` : '';
-            console.log(config)
-            return config;
-        });
-
-        instance({
+        let self = this;
+        axios({
             method:'post',
             url: 'http://localhost:3000/api/v1/projects', 
             data: { 'name' : this.name.value, 
                     'description' : this.description.value
                   },
-                  mode: 'no-cors',
-                  credentials: 'same-origin'
+            withCredentials:true 
         })
         .then(res => {
-            console.log(res);
-            console.log(res.data);
-            //self.getAllProjects(); ??
+            this.setState({ message: res.data });
+            window.setTimeout(function(){
+                self.props.history.push("/Projects");
+            }, 1500); 
         })
         .catch(function (error) {
-            console.log(error)
+            console.log(error.response);
+            if(error.response.status === 401){
+                self.setState({ message: 'Please login to add a project' });
+                window.setTimeout(function(){
+                    self.props.history.push("/");
+                }, 1000); 
+            }
         });
     }
 
-    getAllProjects(){
-        axios({
-            method:'get',
-            url: 'http://localhost:3000/api/v1/projects', 
-        })
-        .then(res => {
-            console.log(res);
-            console.log(res.data);
-            var result = res.data;
-            this.setState({ data: result});
-        })
-        .catch(function (error) {
-            console.log(error.response)
-        });
-    }
-    
     render() {
-        var project = this.state.data.map((project) =>
-            <li key={project.id}>
-                <Link to={`/project/${project.id}`}>
-                    <h3>{project.id}</h3>
-                    <h4>{project.name}</h4>
-                </Link>
-            </li> //de adaptat functie de dataObj 
-        );
-
         return(
             <div className="container">
                 <div className="row full-height">
 
-                    <div className="col-sm-6 full-height">
+                    <div className="col-sm-4 col-sm-offset-4 full-height">
                         <div className="with-top same-height">
                             <h3 className="with-bottom">Add a project</h3>
                             <input ref={(name) => {this.name = name;}} placeholder="Name" type="text" id="project" className="field form-control"/>
@@ -87,15 +57,11 @@ class AddProject extends Component {
                             <br></br>
                             <button className="btn btn-primary btn-md btn-block action-btn" id="add-btn" onClick={this.addProject}>Add</button>
                         </div>
-                    </div>
-
-                     <div className="col-sm-6 full-height">
-                        <div className="with-top same-height">
-                            <ul id="projects-list">
-                                {project}
-                            </ul>
+                        <div className="with-top">
+                            <h3>{ this.state.message }</h3>
                         </div>
                     </div>
+
                 </div>
             </div>
         );
