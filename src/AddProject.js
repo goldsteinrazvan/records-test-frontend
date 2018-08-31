@@ -32,7 +32,6 @@ class AddProject extends Component {
             }, 1500); 
         })
         .catch(function (error) {
-            console.log(error.response);
             if(error.response.status === 401){
                 self.setState({ message: 'Please login to add a project' });
                 window.setTimeout(function(){

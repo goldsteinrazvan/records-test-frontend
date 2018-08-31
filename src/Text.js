@@ -51,10 +51,10 @@ class Text extends Component {
         if(!message){
             return;
         }
-        var node = document.createElement("p");
-        var textnode = document.createTextNode(message);
+        let node = document.createElement("p");
+        let textnode = document.createTextNode(message);
         node.appendChild(textnode);                       
-        var elem = this.content.appendChild(node);
+        let elem = this.content.appendChild(node);
         return elem;
     }
     
