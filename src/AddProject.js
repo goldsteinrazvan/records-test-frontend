@@ -11,7 +11,8 @@ class AddProject extends Component {
         this.addProject = this.addProject.bind(this); 
 
         this.state = {
-            message: ''
+            message: '',
+            data:[]
         }
     }
 
@@ -27,11 +28,14 @@ class AddProject extends Component {
         })
         .then(res => {
             this.setState({ message: res.data });
+            this.setState({ data: [] });
             window.setTimeout(function(){
                 self.props.history.push("/Projects");
             }, 1500); 
         })
         .catch(function (error) {
+            let errArr = error.response.data.errors[0].msg;
+            self.setState({ data: errArr });
             if(error.response.status === 401){
                 self.setState({ message: 'Please login to add a project' });
                 window.setTimeout(function(){
@@ -42,6 +46,11 @@ class AddProject extends Component {
     }
 
     render() {
+        let errors = this.state.data.map((error) =>
+            <li>
+                <h3>{error.msg}</h3>
+            </li>
+        );
         return(
             <div className="container">
                 <div className="row full-height">
@@ -58,6 +67,9 @@ class AddProject extends Component {
                         </div>
                         <div className="with-top">
                             <h3>{ this.state.message }</h3>
+                            <ul>
+                                {errors}
+                            </ul>
                         </div>
                     </div>
 
