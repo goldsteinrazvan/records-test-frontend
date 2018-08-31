@@ -71,7 +71,6 @@ class Projects extends Component {
             self.description.value = res.data.description;
         })
         .catch(function (error) {
-            console.log(error.response)
             let err = error.response.data.errors[0].msg;
             self.setState({ message: err });
         });
@@ -95,7 +94,6 @@ class Projects extends Component {
             }, 1000); 
         })
         .catch(function (error) {
-            console.log(error.response)
             let err = error.response.data.errors[0].msg;
             self.setState({ updateMsg: err });
         });
@@ -129,7 +127,7 @@ class Projects extends Component {
                     </div>
 
                     <div className="col-sm-6 full-height">
-                        <h3 class="with-top">{this.state.updateMsg}</h3>
+                        <h3 className="with-top">{this.state.updateMsg}</h3>
                         <div className="with-top" id="update-section">
                             <input ref={(name) => {this.name = name;}} placeholder="Name" type="text" id="project" className="field form-control"/>
                             <br></br>
